@@ -6,44 +6,55 @@ import { Component } from 'react-simplified';
 import { Card, Row, Column, Form, Button } from './widgets';
 import taskService, { type Task } from './task-service';
 
-class TaskList extends Component {
-  tasks: Task[] = [];
+class SourceCode extends Component {
+  input = '';
 
   render() {
     return (
-      <Card title="Tasks">
+      <Card title="Javascript online code editor">
         <Row>
-          <Column width={4}>
-            <b>Title</b>
+          <Column width={12}>
+            <Form.Label>Write your code here:</Form.Label>
           </Column>
-          <Column width={1}>
-            <b>Done</b>
+          <Column width={12}>
+            <Form.Textarea
+              value={this.input}
+              onChange={(event) => (this.input = event.currentTarget.value)}
+              rows={10}
+            />
           </Column>
         </Row>
-        {this.tasks.map((task) => (
-          <Row key={task.id}>
-            <Column width={4}>{task.title}</Column>
-            <Column width={1}>
-              <input
-                type="checkbox"
-                checked={task.done}
-                onChange={() => {
-                  taskService
-                    .update({ id: task.id, title: task.title, done: !task.done })
-                    .then(() => this.mounted()); // Update tasks if success
-                }}
-              ></input>
-            </Column>
-            <Column width={1}>
-              <Button.Danger
-                small
-                onClick={() => taskService.delete(task.id).then(() => this.mounted())} // Update tasks if success
-              >
-                ×
-              </Button.Danger>
-            </Column>
-          </Row>
-        ))}
+        <Button.Success
+          onClick={() => {
+            taskService.create(this.input).then(() => {
+              // Reloads the tasks in the Tasks component
+              TaskList.instance()?.mounted(); // .? meaning: call TaskList.instance().mounted() if TaskList.instance() does not return null
+              this.input = '';
+            });
+          }}
+        >
+          Submit
+        </Button.Success>
+      </Card>
+    );
+  }
+}
+
+class CodeOutput extends Component {
+
+  render() {
+    return (
+      <Card title="Code output">
+        <Row>
+          <Column width={12}>
+            <Form.Label>The output of your code will be shown here:</Form.Label>
+          </Column>
+        </Row>
+        <Row>
+          <Column width={12}>
+            <div class="p-3 mb-2 bg-dark text-white">Some code output</div>
+          </Column>
+        </Row>
       </Card>
     );
   }
@@ -53,46 +64,12 @@ class TaskList extends Component {
   }
 }
 
-class TaskNew extends Component {
-  title = '';
-
-  render() {
-    return (
-      <Card title="New task">
-        <Row>
-          <Column width={1}>
-            <Form.Label>Title:</Form.Label>
-          </Column>
-          <Column width={4}>
-            <Form.Input
-              type="text"
-              value={this.title}
-              onChange={(event) => (this.title = event.currentTarget.value)}
-            />
-          </Column>
-        </Row>
-        <Button.Success
-          onClick={() => {
-            taskService.create(this.title).then(() => {
-              // Reloads the tasks in the Tasks component
-              TaskList.instance()?.mounted(); // .? meaning: call TaskList.instance().mounted() if TaskList.instance() does not return null
-              this.title = '';
-            });
-          }}
-        >
-          Create
-        </Button.Success>
-      </Card>
-    );
-  }
-}
-
 const root = document.getElementById('root');
 if (root)
   ReactDOM.render(
     <>
-      <TaskList />
-      <TaskNew />
+      <SourceCode />
+      <CodeOutput />
     </>,
     root
   );

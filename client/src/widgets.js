@@ -12,7 +12,7 @@ export class Card extends Component<{ title?: React.Node, children?: React.Node 
     return (
       <div className="card">
         <div className="card-body">
-          <h5 className="card-title">{this.props.title}</h5>
+          <h3 className="card-title">{this.props.title}</h3>
           <div className="card-text">{this.props.children}</div>
         </div>
       </div>
