@@ -231,3 +231,71 @@ export class Form {
   static Select = FormSelect;
   static Textarea = FormTextarea;
 }
+
+/**
+ * Renders alert messages using Bootstrap classes.
+ */
+export class Alert extends Component {
+  alerts: { id: number, text: React.Node, type: string }[] = [];
+  nextId = 0;
+
+  render() {
+    return (
+      <>
+        {this.alerts.map((alert, i) => (
+          <div key={alert.id} className={'alert alert-' + alert.type} role="alert">
+            {alert.text}
+            <button type="button" className="close" onClick={() => this.alerts.splice(i, 1)}>
+              &times;
+            </button>
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  /**
+   * Show success alert.
+   */
+  static success(text: React.Node) {
+    // To avoid 'Cannot update during an existing state transition' errors, run after current event through setTimeout
+    setTimeout(() => {
+      const instance = Alert.instance(); // Get rendered Alert component instance
+      instance?.alerts.push({ id: instance.nextId++, text: text, type: 'success' });
+    });
+  }
+
+  /**
+   * Show info alert.
+   */
+  static info(text: React.Node) {
+    // To avoid 'Cannot update during an existing state transition' errors, run after current event through setTimeout
+    setTimeout(() => {
+      const instance = Alert.instance(); // Get rendered Alert component instance
+      instance?.alerts.push({ id: instance.nextId++, text: text, type: 'info' });
+    });
+  }
+
+  /**
+   * Show warning alert.
+   */
+  static warning(text: React.Node) {
+    // To avoid 'Cannot update during an existing state transition' errors, run after current event through setTimeout
+    setTimeout(() => {
+      const instance = Alert.instance(); // Get rendered Alert component instance
+      instance?.alerts.push({ id: instance.nextId++, text: text, type: 'warning' });
+    });
+  }
+
+  /**
+   * Show danger alert.
+   */
+  static danger(text: React.Node) {
+    // To avoid 'Cannot update during an existing state transition' errors, run after current event through setTimeout
+    setTimeout(() => {
+      const instance = Alert.instance(); // Get rendered Alert component instance
+      instance?.alerts.push({ id: instance.nextId++, text: text, type: 'danger' });
+    });
+  }
+}
+
