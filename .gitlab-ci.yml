@@ -53,8 +53,8 @@ test:
     # Create database table
     - echo "CREATE TABLE Tasks (id INT NOT NULL AUTO_INCREMENT, title TEXT NOT NULL, done BOOL
       DEFAULT false, PRIMARY KEY(id));" | mysql $MYSQL_DATABASE
+
     - cd server
-    - echo "" > test/config.js # Create empty config.js to avoid error on npm test
     - npm test
     - cd ../client
     - npm test
